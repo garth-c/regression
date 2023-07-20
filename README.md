@@ -1,13 +1,13 @@
 # Regression
 Project Description:
-In this project, I will develop a regression model to insurance costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
+In this project, I will develop a regression model to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
 
-I will use a regression model for this demo and the overall goal is to develop an explanatorey model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. 
+I will use a regression model for this demo and the overall goal is to develop an explanatorey model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R^2 is a straight forward method for purposes of this demo.
 
 Data description:
-source: Machine Learning with R dataset
-data title: Inurance cost modeling data set
-dimensions of the data (RxC): 1,338 x 7
++ source: 'Machine Learning with R' dataset
++ data title: Insurance cost modeling data set
++ dimensions of the data (RxC): 1,338 x 7
 
 I modified some of the numeric values by rounding them to two decimal places in Excel. A screen shot of the first few records is shown below.
 
@@ -19,7 +19,9 @@ I modified some of the numeric values by rounding them to two decimal places in 
 + data ingest and data prep
 + explore the data
 + feature selection
-+ regression model
++ Multivariate regression model
++ Gamma regression model
++ Poisson regression model
 + compare the models
 
 -------------------------------------------------------------------------------------------------
@@ -62,7 +64,7 @@ dim(insurance) #must match the input file dimensions
 str(insurance)
 ```
 
-The output from skimr, which was used for the data quality asessment is below. There were no conerns with this data.
+The output from 'skimr', which was used for the data quality asessment, is below. There were no conerns with this data.
 
 <img width="673" alt="image" src="https://github.com/garth-c/regression/assets/138831938/ab4d11db-64f9-47ed-b32e-2d810fb40907">
 
@@ -134,7 +136,7 @@ Looking for outliers in the numeric predictors, there are some in the bmi, but n
 
 ![image](https://github.com/garth-c/regression/assets/138831938/1c9fa156-a022-4cdf-8f11-2bd61c8b9c4a)
 
-Now I will analyze the categorical variables. The function that I will use for this a Cramer's V which incorporates additional factors into a Chi-Square test such as sample size and then put the effect size into a 0 -> 1 scale which is very convenient. The lower the Cramer's V score, the less correlation there is between the categorical factors which is what I want for categorical predictors.  
+Now I will analyze the categorical variables. The function that I will use for this Cramer's V, which incorporates additional aspects into a Chi-Square test such as sample size and then scales the effect size into a 0 -> 1 scale which is very convenient. The lower the Cramer's V score, the less correlation there is between the categorical factors which is what I want for categorical predictors.  
 
 ```
 ###~~~
@@ -151,13 +153,13 @@ rcompanion::cramerV(x = categoricals$smoker,
 
 An example output is shown below. After reviewing all of the categorical combinations, there were no highly correlated categorical values to be concerned with. 
 
+
 <img width="313" alt="image" src="https://github.com/garth-c/regression/assets/138831938/1b1e7b1b-72d0-492c-a975-5ec3af92a0ca">
+
 
 Next, I will compare the numeric predictors to the categorical predictors to see if there are any highly correlation combinations. If there are any significant correlations, I will test the power of the output and then evaluate the effect size to determine if a removal should be made. The idea is to compare the means and mean ranks of the numeric values over the groups in the categoricals to see if there are any significant differences which indicate the a strong correlation. 
 
-After reviewing all combinations of the numeric to categorical values, the only combination with a significant correlation was bmi over region.
-
-The first part is a visual inspection for any obvious signs of a difference. In this specific example, there is definitely visual differences in bmi between the regions. 
+After reviewing all combinations of the numeric to categorical values, the only combination with a significant correlation was bmi over region which is shown below. The first part is a visual inspection for any obvious signs of a difference. In this specific example, there are definitely visual differences in bmi between the regions. 
 
 ```
 ###~~~
@@ -186,7 +188,7 @@ kruskal.test(bmi ~ sex,
              data = insurance)
 ```
 
-The output from this test for bmi over region is shown below. The test result is significant which indicates that there is significant correlation for this combination. This significant result now needs more context to properly evaluate it.
+The output from this test for bmi over region is shown below. The test result is significant which indicates that there is significant correlation for this combination. This significant result now needs more context to properly evaluate it. Note that categorical data used in a Kruskal test is an 'off-label' usage, but I have deemed this an acceptable deviation for an exploratory model.
 
 <img width="410" alt="image" src="https://github.com/garth-c/regression/assets/138831938/70542598-13a4-4a32-af14-d2c92e7588e6">
 
@@ -224,9 +226,12 @@ rstatix::kruskal_effsize(data = insurance,
 
 The results are shown below. Since the effect size is small in magnitude, any adjustements or removals for this specific correlation combination is not warranted and I will leave this data alone. The confidence interval for the effect size is between 4% and 9% with 95% confidence. So there definitely is an effect with this combination but it is really small. 
 
++ overall, if there were significantly large relationships between the predictors, this could be accounted for within the regression model definition. This would be in the form of combined predictors as a single term and then evaluate the model output as if the combined predictor was another unique predictor variable. In this case, I don't need to do any of this. 
+
 <img width="382" alt="image" src="https://github.com/garth-c/regression/assets/138831938/df4fb51b-dac7-4820-8de8-6194ed7759b9">
 
-Now to evaluate the numeric predictors to the numeric response variable. This will informative as to what kind of regression is needed based on these relationships. For example if there is a polynomial relationship between one of the predictors and the response, then this could be accounted for in the regression model definition. So for this section, I want to evaluate the bend in the relationship line between all combinations of these variable. The relationship line in this case is a 'loess' line. 
+
+Now to evaluate the numeric predictors to the numeric response variable. This will informative as to what kind of regression is needed based for these relationships. For example if there is a polynomial relationship between one of the predictors and the response, then this could be accounted for in the regression model definition by raising the numeric predictor to an appropriate power. So for this section, I want to evaluate the bend in the relationship line between all combinations of these variable. The relationship line in this case is a 'loess' line. 
 
 Relationship between charges and children is below. There isn't enough bend in the loess line to be compelling of a model definition adjustment.
 
@@ -247,7 +252,7 @@ The last part of the exploration phase is to compare the numeric response means/
 
 # feature selection
 
-For the preliminry feature selection proces, I will use the Boruta library. 
+For the preliminary feature selection proces, I will use the Boruta library. 
 
 ```
 #load the needed libs
@@ -312,11 +317,11 @@ The Boruta model iterations and results for each of the predictors is shown belo
 
 ---------------------------------------------------------------------------------------------------------
 
-# build the regression models
+# Multivariate Regression Model
 
 This section will focus on building regression models to meet the project goal which is a model with the highest R^2 explanatory value. There are many other metrics that need to be considered for comparing regression models, but since this is exploratory, I will focus on one simple metric for the comparisons. 
 
-Before the model development begins, it is important to note that the R functions for 'lm' and 'glm' will automatically create dummy variables for the categorical predictors. This process replaces the actual categorical 
+Before the model development begins, it is important to note that the R functions for 'lm' and 'glm' will automatically create dummy variables for the categorical predictors. This process replaces the actual categorical data as shown below.
 
 
 ```
@@ -402,6 +407,10 @@ The plot doesn't show signs of non constant variance, grouping, or any real skew
 
 <img width="259" alt="image" src="https://github.com/garth-c/regression/assets/138831938/3f63215a-ddf7-4627-acfc-453e2755b43d">
 
+----------------------------------------------------------------------------------------------------------
+
+# Gamma Regression Model
+
 Since the numeric response variable is right skewed, I wanted to try a Gamma regression which is specifically used for this type of situation. The code for a Gamma regression model is below.
 
 ```
@@ -414,6 +423,14 @@ gamma_model <- glm(charges ~ .,
 gamma_model
 summary(gamma_model)
 ```
+
+
+
+The model output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. These are the same predictors as OLS model 
+
+
+<img width="504" alt="image" src="https://github.com/garth-c/regression/assets/138831938/a1510e2d-92e8-4c82-bb94-9bbb40cb52a6">
+
 
 Gamma regression models don't produce an R^2 value directly. Thus a version of this metric called a pseudo R^2 will be used as a substitute. The code to do this is below.
 
@@ -429,9 +446,6 @@ The output is below. The value is ~68% which is about the same as the OLS model.
 
 <img width="136" alt="image" src="https://github.com/garth-c/regression/assets/138831938/43cb0e0a-b874-4844-a65c-dda5e3a30aa5">
 
-The model output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. These are the same predictors as OLS model 
-
-<img width="504" alt="image" src="https://github.com/garth-c/regression/assets/138831938/a1510e2d-92e8-4c82-bb94-9bbb40cb52a6">
 
 The Gamma model produces an Analysis of Deviance table in lieu of an ANOVA table. The largest deviance values are the strongest predictor variables. The table is shown below.
 
@@ -449,6 +463,10 @@ The underlying model assumptions are mostly the same for a Gamma regression. The
 The computational normality test (Shapiro Wilks test) provide strong evidence that the residuals are not normally distributed which is a key Gamma model assumption. So the results of the Gamma regression model is also deemed to be suspect at this point.
 
 <img width="234" alt="image" src="https://github.com/garth-c/regression/assets/138831938/e4ad96f0-6a68-4fde-9c80-2ee21384e2ec">
+
+-----------------------------------------------------------------
+
+# Poisson Regression Model
 
 The last model to try is a Poisson regression model which works a little differently than OLS and Gamma. The code to produce this model is below.
 
