@@ -185,7 +185,7 @@ The output from this test for bmi over region is shown below. The test result is
 
 <img width="410" alt="image" src="https://github.com/garth-c/regression/assets/138831938/70542598-13a4-4a32-af14-d2c92e7588e6">
 
-The first part of this context is a power test to determine of there is enough source data to detect our desired effect size (small in this case) and if the test results are based on enough data that they would be considered reliable and repeatable. There isn't a specific power test for a Kruskal function that I am aware of so I will substitute a Chi-Square power test instead as it is probably close enough for an exploratory project. 
+The first part of this context is a power test to determine of there is enough source data to detect our desired effect size (small in this case) and if the test results are based on enough data that they would be considered reliable and repeatable. There isn't a specific power test for a Kruskal function that I am aware of so I will substitute a Chi-Square power test instead as it is probably close enough for an exploratory project. For the degrees of freedom, I used the predictor variable with the most factor levels as the input (4 different regions) as I felt this was the most conservative calcuation to use (more degrees of freedom would mean a higher power metric threshold to meet). 
 
 ```
 #chi-square power testing - probably the closest one to a kruskal test
@@ -195,7 +195,7 @@ effect_size_chsq <- pwr::cohen.ES(test = 'chisq',
 #conduct the power test
 pwr::pwr.chisq.test(w = effect_size_chsq$effect.size,
                     N = nrow(insurance), #sample size is the row count
-                    df = (4-1), #four regions
+                    df = (4-1), #four regions is the most conservative input
                     #power = 0.80,
                     sig.level = 0.05)
 ```
@@ -217,7 +217,7 @@ rstatix::kruskal_effsize(data = insurance,
                          nboot = 1000) #number of bootstrap reps for the c.i.
 ```
 
-The results are shown below. Since the effect size is small in magnitude, any adjustements or removals for this specific correlation combination is not warranted and I will leave this data alone. 
+The results are shown below. Since the effect size is small in magnitude, any adjustements or removals for this specific correlation combination is not warranted and I will leave this data alone. The confidence interval for the effect size is between 4% and 9% with 95% confidence. So there definitely is an effect with this combination but it is really small. 
 
 <img width="382" alt="image" src="https://github.com/garth-c/regression/assets/138831938/df4fb51b-dac7-4820-8de8-6194ed7759b9">
 
@@ -241,14 +241,68 @@ The last part of the exploration phase is to compare the numeric response means/
 
 # feature selection
 
+For the preliminry feature selection proces, I will use the Boruta library. 
 
+```
+#load the needed libs
+library(Boruta) #feature selection
 
+#set the rando seed generator
+set.seed(12345)
+```
 
+From there, the Boruta library will identify the most important predictors for the response variable.
 
+```
+###~~~
+#boruta section
+###~~~
 
+#all predictors need to be factors
+glimpse(insurance)
 
+#feature Selection identification
+key_predictors <- Boruta::Boruta(charges ~ .,
+                                 data = insurance,
+                                 doTrace = 3,
+                                 pValue = 0.05,
+                                 mcAdj = TRUE,
+                                 holdHistory = TRUE,
+                                 getImp = getImpRfGini,
+                                 maxRuns = 20)
 
+#look at the output
+print(key_predictors)
+attributes(key_predictors) #see what is available
 
+#create a df to hold the results
+key_predictors_df <- as.data.frame(key_predictors$finalDecision)
+View(key_predictors_df)
+
+#plot of the key predictor variables
+windows()
+plot(key_predictors,
+     las = 2,
+     cex.axis = 0.7,
+     main = 'Key Predictors')
+
+#plot the history - in case this is needed
+windows()
+plotImpHistory(key_predictors,
+               main = 'Importance History')
+```
+
+The output from Boruta was put into a data frame and the Boruta decision on each of the predictors is shown below. This will be informative when the regression model is built but for now this is still just an advisement as this is an exploratory model. 
+
+<img width="125" alt="image" src="https://github.com/garth-c/regression/assets/138831938/e41558fc-9b79-4e79-bd55-8c7d7b5fc990">
+
+The Boruta plot is shown below. The model shows that age, bmi, and smoker are the best predictors for insurance claims. 
+
+![image](https://github.com/garth-c/regression/assets/138831938/02f3fa83-7f02-42d1-b4f0-7aa2c4840654)
+
+The Boruta model iterations and results for each of the predictors is shown below. The green lines represent the best Boruta predictors referenced above. 
+
+![image](https://github.com/garth-c/regression/assets/138831938/d557c0f9-2b19-4978-99a6-269939c97866)
 
 
 
