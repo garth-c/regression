@@ -20,7 +20,7 @@ I modified some of the numeric values by rounding them to two decimal places in 
 + explore the data
 + feature selection
 + regression model
-+ interpret model results
++ compare the models
 
 -------------------------------------------------------------------------------------------------
 
@@ -378,7 +378,13 @@ OLS models have a lot of underlying assumptions and I will test one of them here
 windows()
 plot(multiple_ols_model_all$residuals,
      main = 'Model Residuals')
+```
 
+The residuals plot is shown below
+
+![image](https://github.com/garth-c/regression/assets/138831938/a6b730a6-2f02-42ab-80ac-6e18595e3be0)
+
+```
 #Ho: residuals are normally distributed
 #Ha: residuals are not normally distributed
 shapiro.test(multiple_ols_model_all$residuals)
@@ -419,6 +425,15 @@ The model output is shown below. From the model output, the predictors age, bmi,
 
 <img width="504" alt="image" src="https://github.com/garth-c/regression/assets/138831938/a1510e2d-92e8-4c82-bb94-9bbb40cb52a6">
 
+The Gamma model produces an Analysis of Deviance table in lieu of an ANOVA table. The largest deviance values are the strongest predictor variables. The table is shown below.
+
+```
+#analysis of deviance table
+anova(gamma_model)
+```
+
+<img width="334" alt="image" src="https://github.com/garth-c/regression/assets/138831938/5e0fffda-489f-427a-bbe5-2b2193870a46">
+
 The underlying model assumptions are mostly the same for a Gamma regression. There is not obvious evidence of non constant variance with this plot
 
 ![image](https://github.com/garth-c/regression/assets/138831938/a1969cd4-311f-4641-bca8-79436cc559fc)
@@ -456,6 +471,15 @@ The result is about the same as the other two models at ~68%.
 
 <img width="134" alt="image" src="https://github.com/garth-c/regression/assets/138831938/f70e3cdd-2c07-44a1-8305-a6cd251f3206">
 
+The Poisson model produces an Analysis of Deviance table in lieu of an ANOVA table. The largest deviance values are the strongest predictor variables. The table is shown below.
+
+```
+#analysis of deviance table
+anova(poisson_model)
+```
+
+<img width="319" alt="image" src="https://github.com/garth-c/regression/assets/138831938/78e313fb-8350-44a5-b8c9-16b25d0dd34a">
+
 The model residuals plot also shows no obvious signs of non constant variance. 
 
 ![image](https://github.com/garth-c/regression/assets/138831938/495686bb-51fb-4b68-82e7-73cb0c5b826e)
@@ -466,7 +490,12 @@ The computational normality test (Shapiro Wilks test) provide strong evidence th
 
 
 # compare the regression models
+One way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R^2 score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
 
+<img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
+
+
+Thanks for reading this!
 
 
 
