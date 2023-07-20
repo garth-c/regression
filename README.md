@@ -304,13 +304,170 @@ The Boruta model iterations and results for each of the predictors is shown belo
 
 ![image](https://github.com/garth-c/regression/assets/138831938/d557c0f9-2b19-4978-99a6-269939c97866)
 
+# build the regression models
+
+This section will focus on building regression models to meet the project goal which is a model with the highest R^2 explanatory value. There are many other metrics that need to be considered for comparing regression models, but since this is exploratory, I will focus on one simple metric for the comparisons. 
+
+Before the model development begins, it is important to note that the R functions for 'lm' and 'glm' will automatically create dummy variables for the categorical predictors. This process replaces the actual categorical 
+
+
+```
+###~~~
+#set up the computing environment
+###~~~
+
+#load the needed libs
+library(readxl) #read in excel files
+library(tidyverse) #data wrangling
+library(fastDummies) #dummy data creation for categoricals
+library(stats) #glm models
+
+#set the random seed number
+set.seed(12345)
+```
+
+The code to produce the dummy variable version of the source data is shown below.
+
+```
+###~~~
+#create dummy variables for visual inspection
+###~~~
+
+
+#create dummy variables using dummyVars()
+dummied_data <- fastDummies::dummy_cols(insurance)
+
+glimpse(dummied_data)
+
+#remove the redundant columns
+insurance_adj <- dummied_data[, -c(3,6,7)]
+```
+
+The output for this is shown below. As can be seen, the categorical predictors are represented with 1/0 depending on if the factor level was either true or not true for that record.
+
+<img width="559" alt="image" src="https://github.com/garth-c/regression/assets/138831938/991537d0-773c-4702-8350-f3801c325f81">
+
+
+The first regression model is a multivariate OLS (ordinary least squares) model. The code is shown below.
+
+```
+#initial model
+multiple_ols_model_all <- lm(charges ~ ., #charges are predicted by all variables
+                             data = insurance_adj)
+
+#evaluate the model
+multiple_ols_model_all
+summary(multiple_ols_model_all)
+
+#look at the output
+anova(multiple_ols_model_all)
+```
+
+The OLS output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. Overall, the model has an adjusted R^2 value of 74.9% which isn't bad. Also the F statistic has a significant result (p-value is almost zero) so this model does have merit. 
+
+<img width="406" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d6f6102a-d8e6-4d5c-8635-3cfb1b1e9658">
+
+A screen shot of the OLS model ANOVA is shown below. This is a nice summary for the predictor variables importance to the response variable.
+
+<img width="442" alt="image" src="https://github.com/garth-c/regression/assets/138831938/dde89436-9f25-4d13-914b-d3a207a80d81">
+
+OLS models have a lot of underlying assumptions and I will test one of them here which is that the residuals are normally distributed. 
+
+```
+#plot the residuals
+windows()
+plot(multiple_ols_model_all$residuals,
+     main = 'Model Residuals')
+
+#Ho: residuals are normally distributed
+#Ha: residuals are not normally distributed
+shapiro.test(multiple_ols_model_all$residuals)
+```
+
+The plot doesn't show signs of non constant variance, grouping, or any real skew. But the computational normality test (Shapiro Wilks test) provide strong evidence that the residuals are not normally distributed which is a key OLS model assumption. So the results of the OLS model are deemed to be suspect at this point. 
+
+<img width="259" alt="image" src="https://github.com/garth-c/regression/assets/138831938/3f63215a-ddf7-4627-acfc-453e2755b43d">
+
+Since the numeric response variable is right skewed, I wanted to try a Gamma regression which is specifically used for this type of situation. The code for a Gamma regression model is below.
+
+```
+#gamma regression model
+gamma_model <- glm(charges ~ .,
+                   data = insurance_adj,
+                   family = Gamma(link = 'log'))
+
+#evaluate the model
+gamma_model
+summary(gamma_model)
+```
+
+Gamma regression models don't produce an R^2 value directly. Thus a version of this metric called a pseudo R^2 will be used as a substitute. The code to do this is below.
+
+```
+#calculate the McFadden's pseudo-R-squared
+pseudorsq <- 1 - (gamma_model$deviance / gamma_model$null.deviance)
+
+#print the pseudo-R-squared value
+print(pseudorsq)
+```
+
+The output is below. The value is ~68% which is about the same as the OLS model.
+
+<img width="136" alt="image" src="https://github.com/garth-c/regression/assets/138831938/43cb0e0a-b874-4844-a65c-dda5e3a30aa5">
+
+The model output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. These are the same predictors as OLS model 
+
+<img width="504" alt="image" src="https://github.com/garth-c/regression/assets/138831938/a1510e2d-92e8-4c82-bb94-9bbb40cb52a6">
+
+The underlying model assumptions are mostly the same for a Gamma regression. There is not obvious evidence of non constant variance with this plot
+
+![image](https://github.com/garth-c/regression/assets/138831938/a1969cd4-311f-4641-bca8-79436cc559fc)
+
+The computational normality test (Shapiro Wilks test) provide strong evidence that the residuals are not normally distributed which is a key Gamma model assumption. So the results of the Gamma regression model is also deemed to be suspect at this point.
+
+<img width="234" alt="image" src="https://github.com/garth-c/regression/assets/138831938/e4ad96f0-6a68-4fde-9c80-2ee21384e2ec">
+
+The last model to try is a Poisson regression model which works a little differently than OLS and Gamma. The code to produce this model is below.
+
+```
+#poisson model
+poisson_model <- glm(charges ~ .,
+                     data = insurance_adj,
+                     family = 'poisson')
+
+poisson_model
+summary(poisson_model)
+```
+The output from this model is shown below. 
+
+<img width="446" alt="image" src="https://github.com/garth-c/regression/assets/138831938/aa6fbb97-4c0d-478e-a829-464418636ec7">
+
+The same tactics will be used to evaluate the assumptions for this model as well. The pseudo R^2 value code is below.
+
+```
+#calculate the McFadden's pseudo-R-squared
+pseudorsq_poisson <- 1 - (poisson_model$deviance / poisson_model$null.deviance)
+
+#print the pseudo-R-squared value
+print(pseudorsq)
+```
+
+The result is about the same as the other two models at ~68%. 
+
+<img width="134" alt="image" src="https://github.com/garth-c/regression/assets/138831938/f70e3cdd-2c07-44a1-8305-a6cd251f3206">
+
+The model residuals plot also shows no obvious signs of non constant variance. 
+
+![image](https://github.com/garth-c/regression/assets/138831938/495686bb-51fb-4b68-82e7-73cb0c5b826e)
+
+The computational normality test (Shapiro Wilks test) provide strong evidence that the residuals are not normally distributed which is a key Poisson model assumption. So the results of the Poisson regression model is also deemed to be suspect at this point.
+
+<img width="236" alt="image" src="https://github.com/garth-c/regression/assets/138831938/051563f9-b5b7-49c2-a14b-7dc0ba17d953">
+
+
+# compare the regression models
 
 
 
 
 
-
-
-
-
-  
