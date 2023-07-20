@@ -238,6 +238,7 @@ Relationship between charges and bmi is below. There isn't enough bend in the lo
 
 The last part of the exploration phase is to compare the numeric response means/mean ranks over the predictor categoricals for all combinations. A strong correlation is expected since these are predictor variables. After performing this analysis using the same code as above for the cateorical to numeric predictors, only 'smoker' was a strong correlation. The modeling process will evaluate all of these relationships. 
 
+-----------------------------------------------------------------------------------------
 
 # feature selection
 
@@ -303,6 +304,8 @@ The Boruta plot is shown below. The model shows that age, bmi, and smoker are th
 The Boruta model iterations and results for each of the predictors is shown below. The green lines represent the best Boruta predictors referenced above. 
 
 ![image](https://github.com/garth-c/regression/assets/138831938/d557c0f9-2b19-4978-99a6-269939c97866)
+
+---------------------------------------------------------------------------------------------------------
 
 # build the regression models
 
@@ -488,6 +491,7 @@ The computational normality test (Shapiro Wilks test) provide strong evidence th
 
 <img width="236" alt="image" src="https://github.com/garth-c/regression/assets/138831938/051563f9-b5b7-49c2-a14b-7dc0ba17d953">
 
+------------------------------------------------------------------------------------
 
 # compare the regression models
 One way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R^2 score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
@@ -496,6 +500,8 @@ One way to compare the models is to determine the common predictors between the 
 
 
 Thanks for reading this!
+
+-----------------------------------------------------------------------------
 
 
 
