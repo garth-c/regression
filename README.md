@@ -24,7 +24,12 @@ I modified some of the numeric values by rounding them to two decimal places in 
 
 -------------------------------------------------------------------------------------------------
 
-#data ingest and data prep
+### Go back to my profile page
+[garth-c profile page] (https://github.com/garth-c)
+
+------------------------------------------------------------------------
+
+# data ingest and data prep
 
 Set up the computing environment in RStudio.
 
@@ -503,6 +508,9 @@ Thanks for reading this!
 
 -----------------------------------------------------------------------------
 
+### Go back to my profile page
+[garth-c profile page] (https://github.com/garth-c)
 
+---------------------------------------------------------------
 
 
