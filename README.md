@@ -9,7 +9,9 @@ Data description:
 + data title: Insurance cost modeling data set
 + dimensions of the data (RxC): 1,338 x 7
 
-I modified some of the numeric values by rounding them to two decimal places in Excel. A screen shot of the first few records is shown below.
+I modified some of the numeric values by rounding them to two decimal places in Excel. Also, there were no missing values in this data set. If there were, then I would have considered using the typical methods to address the situation. For example, removing the records if the count is small and not serious bias would be introduced by this action. Or filling in the missing values using means/medians/modes if no bias would be introduced. In addition, more sophisticated methods could be used to impute missing values by using other models to predict what the missing values would be based on the data that was available for the record. No other data prep was needed for this demo project. 
+
+A screen shot of the first few records is shown below.
 
 <img width="257" alt="image" src="https://github.com/garth-c/regression/assets/138831938/9c0e1db4-e212-4dd0-92e5-392ac8558c8f">
 
@@ -132,7 +134,7 @@ The numeric predictor correlations are shown below. There isn't much correlation
 
 ![image](https://github.com/garth-c/regression/assets/138831938/445cf6d8-bea2-4f5e-a816-fa5411990128)
 
-Looking for outliers in the numeric predictors, there are some in the bmi, but not enough to be concerned with, which is also a good sign for the value of these variables as predictors. 
+Looking for outliers in the numeric predictors, there are some in the bmi, but not enough to be concerned with, which is also a good sign for the value of these variables as predictors. If there were a significant amount of outliers, then a transformation of some variety (log, Box-Cox analysis, etc.) would be considered for this project. 
 
 ![image](https://github.com/garth-c/regression/assets/138831938/1c9fa156-a022-4cdf-8f11-2bd61c8b9c4a)
 
@@ -521,6 +523,11 @@ One way to compare the models is to determine the common predictors between the 
 
 <img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
 
+Since this is an exploratory demo, I didn't perform an analysis on other regression concerns such as influential points in the data of Cooke's Distance analysis, etc. These methods would generally be applied in the non exploratory modeling phase of a project. 
+
+Lastly, the interpretation of these regression models is that for every additional unit of response variable, the predictor variables would increase or decrease at the rate represented by the coefficient in the model output. These coefficients are in the 'Estimate' column shown in each model output. The p-value associated with each predictor variable has a series of asterics next to them if they are significant. The really significant predictors have 3 asterics next to them. 
+
+The output of these exploratory models is a good start to understanding the relationship between the predictor variables and the response variables. Once a reasonable model is developed, management is then able to respond to these relationships in order to acheive a goal such as increasing sales, decresing costs or risks, etc. Thus, regression modeling is a very valuable approach for managemet to use. 
 
 Thanks for reading this!
 
