@@ -523,11 +523,11 @@ One way to compare the models is to determine the common predictors between the 
 
 <img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
 
-Since this is an exploratory demo, I didn't perform an analysis on other regression concerns such as influential points in the data of Cooke's Distance analysis, etc. These methods would generally be applied in the non exploratory modeling phase of a project. 
+Since this is an exploratory demo, I didn't perform an analysis on other regression concerns such as influential points in the data of Cooke's Distance analysis, etc. These methods would generally be applied in the non exploratory modeling phase of a project. There are many other tactics that could be explored to improve the model such as finding a grouping (descritization) for 'age', 'bmi', or 'children' that would improve the signal coming from this data. Also looking for other data to incorporate is another possible approach to improving these models. 
 
 Lastly, the interpretation of these regression models is that for every additional unit of response variable, the predictor variables would increase or decrease at the rate represented by the coefficient in the model output. These coefficients are in the 'Estimate' column shown in each model output. The p-value associated with each predictor variable has a series of asterics next to them if they are significant. The really significant predictors have 3 asterics next to them. 
 
-The output of these exploratory models is a good start to understanding the relationship between the predictor variables and the response variables. Once a reasonable model is developed, management is then able to respond to these relationships in order to acheive a goal such as increasing sales, decresing costs or risks, etc. Thus, regression modeling is a very valuable approach for managemet to use. 
+The output of these exploratory models is a good start to understanding the relationship between the predictor variables and the response variables. Once a reasonable model is developed, management is then able to respond to these relationships in order to acheive a goal such as increasing sales, decresing costs or risks, etc. Thus, regression modeling is a very valuable approach for management to use. 
 
 Thanks for reading this!
 
