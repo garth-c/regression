@@ -1,6 +1,10 @@
 # Regression
 Project Description:
-In this project, I will develop multiple simple regression models to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
+In this exploratory regression modeling project, I delve into the world of predictive analysis using regression techniques. The primary objective is to gain insights into the relationships between various independent variables and a target variable of interest. Through comprehensive data exploration and visualization, I want to identify significant patterns and correlations within the dataset.
+
+Utilizing popular regression algorithms, I will construct predictive models to forecast the target variable's values based on the input features. Throughout the project, I emphasize thorough documentation and explanatory visualizations, allowing users to comprehend the modeling process and results effectively.
+
+Specificallyt, in this project I will develop multiple simple regression models to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
 
 The overall goal is to develop an explanatory regression model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R^2 is a straight forward method for purposes of this demo.
 
