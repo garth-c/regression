@@ -1,6 +1,6 @@
 # Regression
 Project Description:
-In this exploratory regression modeling project, I delve into the world of predictive analysis using regression techniques. The primary objective is to gain insights into the relationships between various independent variables and a target variable of interest. Through comprehensive data exploration and visualization, I want to identify significant patterns and correlations within the dataset.
+In this exploratory regression modeling project, I am working in the space of predictive analysis using regression techniques. The primary objective is to gain insights into the relationships between various independent variables and a target variable of interest. Through comprehensive data exploration and visualization, I want to identify significant patterns and correlations within the dataset.
 
 Utilizing popular regression algorithms, I will construct predictive models to forecast the target variable's values based on the input features. Throughout the project, I emphasize thorough documentation and explanatory visualizations, allowing users to comprehend the modeling process and results effectively.
 
