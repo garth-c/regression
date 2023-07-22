@@ -1,8 +1,8 @@
 # Regression
 Project Description:
-In this project, I will develop a regression model to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
+In this project, I will develop multiple simple regression models to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
 
-I will use a regression model for this demo and the overall goal is to develop an explanatorey model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R^2 is a straight forward method for purposes of this demo.
+The overall goal is to develop an explanatory regression model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R^2 is a straight forward method for purposes of this demo.
 
 Data description:
 + source: 'Machine Learning with R' dataset
@@ -523,7 +523,7 @@ One way to compare the models is to determine the common predictors between the 
 
 <img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
 
-Since this is an exploratory demo, I didn't perform an analysis on other regression concerns such as influential points in the data of Cooke's Distance analysis, etc. These methods would generally be applied in the non exploratory modeling phase of a project. There are many other tactics that could be explored to improve the model such as finding a grouping (descritization) for 'age', 'bmi', or 'children' that would improve the signal coming from this data. Also looking for other data to incorporate is another possible approach to improving these models. 
+Since this is an exploratory demo, I didn't perform an analysis on other regression concerns such as influential points in the data of Cooke's Distance analysis, etc. These methods would generally be applied in the non exploratory modeling phase of a project. Centering and scaling the numeric values would reduce the impact of outlier data points. There are many other tactics that could be explored to improve the model such as finding a grouping (descritization) for 'age', 'bmi', or 'children' that would improve the signal coming from this data. Also looking for other data to incorporate is another possible approach to improving these models. 
 
 Lastly, the interpretation of these regression models is that for every additional unit of response variable, the predictor variables would increase or decrease at the rate represented by the coefficient in the model output. These coefficients are in the 'Estimate' column shown in each model output. The p-value associated with each predictor variable has a series of asterics next to them if they are significant. The really significant predictors have 3 asterics next to them. 
 
