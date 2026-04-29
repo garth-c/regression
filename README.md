@@ -8,9 +8,9 @@ In this exploratory regression modeling project, I am working in the space of pr
 
 Utilizing popular regression algorithms, I will construct predictive models to forecast the target variable's values based on the input features. Throughout the project, I emphasize thorough documentation and explanatory visualizations, allowing users to comprehend the modeling process and results effectively.
 
-Specifically, in this project I will develop multiple simple regression models to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
+Specifically, in this project I will develop a Multiple Linear Regression (MLR) model to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
 
-The overall goal is to develop an explanatory regression model with the highest R^2 value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R^2 is a straight forward method for purposes of this demo.
+The overall goal is to develop an explanatory regression model with the highest R² value. This is an exploratory project so the emphasis will be in iteration and discovery. This project will use R and RStudio to develop the models. Note that there are many other ways compare regression models but using R² is a straight forward method for purposes of this demo.
 
 Data description:
 + source: 'Machine Learning with R' dataset
@@ -85,7 +85,7 @@ dim(insurance) #must match the input file dimensions
 str(insurance)
 ```
 
-The output from 'skimr', which was used for the data quality asessment, is below. There were no conerns with this data.
+The output from 'skimr', which was used for the data quality asessment, is below. There were no concerns with this data.
 
 <img width="673" alt="image" src="https://github.com/garth-c/regression/assets/138831938/ab4d11db-64f9-47ed-b32e-2d810fb40907">
 
@@ -127,7 +127,7 @@ The histogram is shown below. As can be seen from the plot, the response data is
 ![image](https://github.com/garth-c/regression/assets/138831938/704f75cc-08b2-4625-9c2a-8d3d2bef491b)
 
 
-Now, the numeric variables are put into a separate data frame and analysed. The idea is that there shouldn't be too much correlation between the numeric predictor variables otherwise this would increase the risk of multicollinearity with the model. For this asssessment, I will focus on correlation between the variables.
+Now, the numeric variables are put into a separate data frame and analyzed. The idea is that there shouldn't be too much correlation between the numeric predictor variables otherwise this would increase the risk of multicollinearity with the model. For this assessment, I will focus on correlation between the variables.
 
 ```
 ###~~~
@@ -340,7 +340,7 @@ The Boruta model iterations and results for each of the predictors is shown belo
 
 # Multivariate Regression Model
 
-This section will focus on building regression models to meet the project goal which is a model with the highest R^2 explanatory value. There are many other metrics that need to be considered for comparing regression models, but since this is exploratory, I will focus on one simple metric for the comparisons. 
+This section will focus on building regression models to meet the project goal which is a model with the highest R² explanatory value. There are many other metrics that need to be considered for comparing regression models, but since this is exploratory, I will focus on one simple metric for the comparisons. 
 
 Before the model development begins, it is important to note that the R functions for 'lm' and 'glm' will automatically create dummy variables for the categorical predictors. This process replaces the actual categorical data as shown below.
 
@@ -397,7 +397,7 @@ summary(multiple_ols_model_all)
 anova(multiple_ols_model_all)
 ```
 
-The OLS output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. Overall, the model has an adjusted R^2 value of 74.9% which isn't bad. Also the F statistic has a significant result (p-value is almost zero) so this model does have merit. 
+The OLS output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. Overall, the model has an adjusted R² value of 74.9% which isn't bad. Also the F statistic has a significant result (p-value is almost zero) so this model does have merit. 
 
 <img width="406" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d6f6102a-d8e6-4d5c-8635-3cfb1b1e9658">
 
@@ -431,8 +431,13 @@ The plot doesn't show signs of non constant variance, grouping, or any real skew
 ----------------------------------------------------------------------------------------------------------
 
 # Gamma Regression Model
+Since the insurance claims data is strictly positive and displays a clear right-skew (long tail), a standard Gaussian (Normal) distribution is inappropriate. I modeled the response variable using a **Gamma Distribution**, defined by the probability density function:
 
-Since the numeric response variable is right skewed, I wanted to try a Gamma regression which is specifically used for this type of situation. The code for a Gamma regression model is below.
+$$f(x; \alpha, \beta) = \frac{\beta^\alpha x^{\alpha-1} e^{-\beta x}}{\Gamma(\alpha)} \quad \text{for } x > 0$$
+
+Where $\alpha$ represents the shape and $\beta$ represents the rate. This approach allows the model to better capture the variance structure of high-cost insurance outliers.
+
+The code for a Gamma regression model is below.
 
 ```
 #gamma regression model
@@ -445,15 +450,13 @@ gamma_model
 summary(gamma_model)
 ```
 
-
-
 The model output is shown below. From the model output, the predictors age, bmi, children, and smoker = no are the significant ones for predicting insurance costs. These are the same predictors as OLS model 
 
 
 <img width="504" alt="image" src="https://github.com/garth-c/regression/assets/138831938/a1510e2d-92e8-4c82-bb94-9bbb40cb52a6">
 
 
-Gamma regression models don't produce an R^2 value directly. Thus a version of this metric called a pseudo R^2 will be used as a substitute. The code to do this is below.
+Gamma regression models don't produce an R² value directly. Thus a version of this metric called a pseudo R² will be used as a substitute. The code to do this is below.
 
 ```
 #calculate the McFadden's pseudo-R-squared
@@ -504,7 +507,7 @@ The output from this model is shown below.
 
 <img width="446" alt="image" src="https://github.com/garth-c/regression/assets/138831938/aa6fbb97-4c0d-478e-a829-464418636ec7">
 
-The same tactics will be used to evaluate the assumptions for this model as well. The pseudo R^2 value code is below.
+The same tactics will be used to evaluate the assumptions for this model as well. The pseudo R² value code is below.
 
 ```
 #calculate the McFadden's pseudo-R-squared
@@ -538,7 +541,14 @@ The computational normality test (Shapiro Wilks test) provide strong evidence th
 ------------------------------------------------------------------------------------
 
 # compare the regression models
-One way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R^2 score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
+
+To evaluate and compare the predictive power across the Multivariate, Gamma, and Poisson models, I utilized the **Coefficient of Determination ($R^2$):**
+
+$$R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$$
+
+This provides a standardized metric to determine how much of the variance in insurance charges is successfully explained by our predictors.
+
+One way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R² score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
 
 <img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
 
