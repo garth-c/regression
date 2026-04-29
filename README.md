@@ -34,6 +34,17 @@ A screen shot of the first few records is shown below.
 + Poisson regression model
 + compare the models
 
+```mermaid
+graph TD;
+    A[Data Ingest and Data Prep] --> B[Explore the Data]
+    B --> C[Feature Selection]
+    C --> D[Multivariate Regression Model]
+    C --> E[Gamma Regression Model]
+    C --> F[Poisson Regression Model]
+    D --> G[Compare the Models]
+    E --> G
+    F --> G
+```
 -------------------------------------------------------------------------------------------------
 
 ### Go back to my profile page
