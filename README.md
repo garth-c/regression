@@ -6,7 +6,7 @@ Use prior historical data to predict insurance costs for customer analysis.
 Project Description:
 In this exploratory regression modeling project, I am working in the space of predictive analysis using regression techniques. The primary objective is to gain insights into the relationships between various independent variables and a target variable of interest. Through comprehensive data exploration and visualization, I want to identify significant patterns and correlations within the dataset. This will be insightful for the predictive value of the resulting models. 
 
-Utilizing popular regression algorithms, I will construct predictive models to forecast the target variable's values based on the input features. Throughout the project, I emphasize thorough documentation and explanatory visualizations, allowing users to comprehend the modeling process and results effectively.
+Utilizing popular regression algorithms, I will construct predictive models to forecast the target variable's values based on the input features. Throughout this project, I emphasize thorough documentation and explanatory visualizations, allowing users to comprehend the modeling process and results effectively.
 
 Specifically, in this project I will develop a Multiple Linear Regression (MLR) model to analyze insurance claims costs based on several predictor variables. The response variable is numeric and it represents the claim costs associated with customers by an insurance company and it is in dollars. The predictor variables are both numeric and categorical for the person associated with the insurance claim cost. 
 
@@ -85,7 +85,7 @@ dim(insurance) #must match the input file dimensions
 str(insurance)
 ```
 
-The output from 'skimr', which was used for the data quality asessment, is below. There were no concerns with this data.
+The output from the 'skimr' library, which was used for the data quality asessment, is below. There were no concerns with this data.
 
 <img width="673" alt="image" src="https://github.com/garth-c/regression/assets/138831938/ab4d11db-64f9-47ed-b32e-2d810fb40907">
 
@@ -252,7 +252,7 @@ The results are shown below. Since the effect size is small in magnitude, any ad
 <img width="382" alt="image" src="https://github.com/garth-c/regression/assets/138831938/df4fb51b-dac7-4820-8de8-6194ed7759b9">
 
 
-Now to evaluate the numeric predictors to the numeric response variable. This will informative as to what kind of regression is needed based for these relationships. For example if there is a polynomial relationship between one of the predictors and the response, then this could be accounted for in the regression model definition by raising the numeric predictor to an appropriate power. So for this section, I want to evaluate the bend in the relationship line between all combinations of these variable. The relationship line in this case is a 'loess' line. 
+Now to evaluate the numeric predictors to the numeric response variable. This will be informative as to what kind of regression is needed based for these relationships. For example if there is a polynomial relationship between one of the predictors and the response, then this could be accounted for in the regression model definition by raising the numeric predictor to an appropriate power. So for this section, I want to evaluate the bend in the relationship line between all combinations of these variable. The relationship line in this case is a 'loess' line. 
 
 Relationship between charges and children is below. There isn't enough bend in the loess line to be compelling of a model definition adjustment.
 
@@ -543,12 +543,13 @@ The computational normality test (Shapiro Wilks test) provide strong evidence th
 # compare the regression models
 
 To evaluate and compare the predictive power across the Multivariate, Gamma, and Poisson models, I utilized the **Coefficient of Determination ($R^2$):**
+The Gamma and Poisson models utilized a psuedo $R^2$ metric. This makes comparisons between models that fundamentally compute differently, somewhat possible. 
 
 $$R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$$
 
 This provides a standardized metric to determine how much of the variance in insurance charges is successfully explained by our predictors.
 
-One way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R² score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
+Another way to compare the models is to determine the common predictors between the model choices and then put the heaviest emphasis on the predictors from the model that best explains the data. All of this is compiled and put into the table below. In the significant predictors row, the common significant predictors are color coded between the models. As can be seen all models produced almost the same list of significant predictors. These predictors are almost the same as the Boruta output. The model with the best R² score is the multivarite OLS model. Since all three models produced mostly the same results, and this is also consistent with the Boruta output, it is reasonable to use these predictors to inform the non exploratory model building process. The summary table is shown below.
 
 <img width="200" alt="image" src="https://github.com/garth-c/regression/assets/138831938/d0f3d2eb-03cc-4831-b08e-da286557e434">
 
